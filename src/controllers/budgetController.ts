@@ -35,4 +35,41 @@ const addBudget = async (req: Request, res: Response, next: NextFunction) => {
    }
 };
 
-export { getAllBudgets, addBudget };
+const deleteBudget = async (
+   req: Request,
+   res: Response,
+   next: NextFunction
+) => {
+   const { id } = req.params;
+
+   try {
+      const deletedBudget = await Budget.deleteBudget(id);
+      res.status(200).json({
+         message: "Presupuesto eliminado con éxito",
+         deletedBudget,
+      });
+   } catch (error) {
+      next(error);
+   }
+};
+
+const updateBudget = async (
+   req: Request,
+   res: Response,
+   next: NextFunction
+) => {
+   const { id } = req.params;
+   const data = req.body;
+
+   try {
+      const updatedBudget = await Budget.updateBudget(id, data);
+      res.status(200).json({
+         message: "Presupuesto actualizado con éxito",
+         updatedBudget,
+      });
+   } catch (error) {
+      next(error);
+   }
+};
+
+export { getAllBudgets, addBudget, deleteBudget, updateBudget };

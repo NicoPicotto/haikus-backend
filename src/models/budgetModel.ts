@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import BudgetBody from '../interfaces/budgetInterface';
+import BudgetBody from "../interfaces/budgetInterface";
 
 const budgetSchema = new mongoose.Schema(
    {
@@ -34,4 +34,32 @@ const addBudget = async (dataBudget: BudgetBody) => {
    }
 };
 
-export default { getAllBudgets, addBudget };
+const deleteBudget = async (id: string) => {
+   try {
+      const deletedBudget = await Budget.findByIdAndDelete(id);
+      if (!deletedBudget) {
+         throw new Error("Presupuesto no encontrado");
+      }
+      return deletedBudget;
+   } catch (error) {
+      throw new Error("Error al eliminar presupuesto");
+   }
+};
+
+const updateBudget = async (id: string, data: Partial<BudgetBody>) => {
+   try {
+      const updatedBudget = await Budget.findByIdAndUpdate(
+         id,
+         { $set: data },
+         { new: true, runValidators: true } // Retorna el documento actualizado y valida los datos
+      );
+      if (!updatedBudget) {
+         throw new Error("Presupuesto no encontrado");
+      }
+      return updatedBudget;
+   } catch (error) {
+      throw new Error("Error al actualizar presupuesto");
+   }
+};
+
+export default { getAllBudgets, addBudget, deleteBudget, updateBudget };
