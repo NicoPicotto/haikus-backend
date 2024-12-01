@@ -1,19 +1,20 @@
+import { connectDB } from "./config/mongo";
 import express from "express";
-import dotenv from "dotenv";
-import helmet from "helmet";
+import budgetRouter from "./routes/budgetRouter";
+import cors from "cors";
 
-dotenv.config();
+process.loadEnvFile();
+
+const PORT = process.env.PORT || 3000;
 
 const app = express();
-const port = process.env.PORT || 4000;
-
-app.use(helmet());
 app.use(express.json());
+app.use(cors());
 
-app.get("/", (req, res) => {
-   res.send("¡Hola, mundo!");
-});
+connectDB();
 
-app.listen(port, () => {
-   console.log(`Servidor corriendo en http://localhost:${port}`);
+app.use("/api/budgets", budgetRouter);
+
+app.listen(PORT, () => {
+   console.log("Servidor en escucha por el puerto http://localhost:" + PORT);
 });
