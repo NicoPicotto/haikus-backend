@@ -51,14 +51,14 @@ const updateBudget = async (id: string, data: Partial<BudgetBody>) => {
       const updatedBudget = await Budget.findByIdAndUpdate(
          id,
          { $set: data },
-         { new: true, runValidators: true } // Retorna el documento actualizado y valida los datos
+         { new: true, runValidators: true }
       );
       if (!updatedBudget) {
          throw new Error("Presupuesto no encontrado");
       }
       return updatedBudget;
    } catch (error) {
-      throw new Error("Error al actualizar presupuesto");
+      throw new Error("Error al actualizar el presupuesto");
    }
 };
 

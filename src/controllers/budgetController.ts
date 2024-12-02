@@ -2,21 +2,35 @@ import { Request, Response, NextFunction } from "express";
 import Budget from "../models/budgetModel";
 import BudgetBody from "../interfaces/budgetInterface";
 
-const getAllBudgets = async (
-   req: Request,
-   res: Response,
-   next: NextFunction
-) => {
+const getAllBudgets = async (req: Request, res: Response) => {
    try {
       const budgets = await Budget.getAllBudgets();
       res.status(200).json(budgets);
-   } catch (error) {
-      next(error);
+   } catch (error: any) {
+      console.error(error);
+      res.status(500).json({
+         message: "Error al obtener los presupuestos",
+         error: error.message,
+      });
    }
 };
 
-const addBudget = async (req: Request, res: Response, next: NextFunction) => {
+const addBudget = async (req: Request, res: Response): Promise<void> => {
    const { title, client, project, items, amount, date } = req.body;
+
+   // Validar campos obligatorios
+   if (!title || !client || !project || !items || !amount) {
+      res.status(400).json({
+         error: "Faltan campos obligatorios. Por favor, verificá el título, cliente, proyecto, items y monto.",
+      });
+   }
+
+   // Validar formato de `items` (debe ser un array no vacío)
+   if (!Array.isArray(items) || items.length === 0) {
+      res.status(400).json({
+         error: "El campo 'items' debe ser un array no vacío.",
+      });
+   }
 
    const budgetBody: BudgetBody = {
       title,
@@ -30,16 +44,16 @@ const addBudget = async (req: Request, res: Response, next: NextFunction) => {
    try {
       const newBudget = await Budget.addBudget(budgetBody);
       res.status(201).json(newBudget);
-   } catch (error) {
-      next(error);
+   } catch (error: any) {
+      console.error(error);
+      res.status(500).json({
+         message: "Error al agregar el presupuesto",
+         error: error.message,
+      });
    }
 };
 
-const deleteBudget = async (
-   req: Request,
-   res: Response,
-   next: NextFunction
-) => {
+const deleteBudget = async (req: Request, res: Response) => {
    const { id } = req.params;
 
    try {
@@ -48,16 +62,16 @@ const deleteBudget = async (
          message: "Presupuesto eliminado con éxito",
          deletedBudget,
       });
-   } catch (error) {
-      next(error);
+   } catch (error: any) {
+      console.error(error);
+      res.status(500).json({
+         message: "Error al eliminar el presupuesto",
+         error: error.message,
+      });
    }
 };
 
-const updateBudget = async (
-   req: Request,
-   res: Response,
-   next: NextFunction
-) => {
+const updateBudget = async (req: Request, res: Response) => {
    const { id } = req.params;
    const data = req.body;
 
@@ -67,8 +81,12 @@ const updateBudget = async (
          message: "Presupuesto actualizado con éxito",
          updatedBudget,
       });
-   } catch (error) {
-      next(error);
+   } catch (error: any) {
+      console.error(error);
+      res.status(500).json({
+         message: "Error al actualizar el presupuesto",
+         error: error.message,
+      });
    }
 };
 
