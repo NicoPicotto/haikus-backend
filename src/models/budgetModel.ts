@@ -3,7 +3,7 @@ import BudgetBody from "../interfaces/budgetInterface";
 
 const budgetSchema = new mongoose.Schema(
    {
-      title: { type: String, required: true },
+      title: { type: String, required: true, unique: true },
       client: { type: String, required: true },
       project: { type: String, required: true },
       items: { type: Array, required: true },

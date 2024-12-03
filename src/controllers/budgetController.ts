@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 import Budget from "../models/budgetModel";
 import BudgetBody from "../interfaces/budgetInterface";
 
@@ -21,7 +21,7 @@ const addBudget = async (req: Request, res: Response): Promise<void> => {
    // Validar campos obligatorios
    if (!title || !client || !project || !items || !amount) {
       res.status(400).json({
-         error: "Faltan campos obligatorios. Por favor, verificá el título, cliente, proyecto, items y monto.",
+         error: "Faltan datos obligatorios. Por favor, verificá todos los campos.",
       });
    }
 
@@ -58,6 +58,7 @@ const deleteBudget = async (req: Request, res: Response) => {
 
    try {
       const deletedBudget = await Budget.deleteBudget(id);
+
       res.status(200).json({
          message: "Presupuesto eliminado con éxito",
          deletedBudget,
