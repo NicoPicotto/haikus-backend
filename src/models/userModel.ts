@@ -27,7 +27,7 @@ const register = async (data: UserBody) => {
          lastName: data.lastName,
          email: data.email,
          password: hashedPassword,
-         role: data.role,
+      
       });
       await newUser.save();
       return newUser;

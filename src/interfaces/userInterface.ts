@@ -3,5 +3,4 @@ export default interface UserBody {
    lastName: string;
    email: string;
    password: string;
-   role: string;
 }
