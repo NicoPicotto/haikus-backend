@@ -27,6 +27,15 @@ Esta API permite a los usuarios gestionar presupuestos, incluyendo la creación,
 -  Node.js v14 o superior
 -  MongoDB v4 o superior
 
+## Documentación
+
+La API está documentada en Postman y se puede acceder a través de los siguientes enlaces:
+
+-  [Presupuestos - CRUD Principal](https://documenter.getpostman.com/view/27668634/2sAYBa99Ud)
+-  [Usuarios - Registro y Autenticación](https://documenter.getpostman.com/view/27668634/2sAYBa99Ue)
+
+Cada enlace incluye ejemplos de requests, responses y descripciones detalladas de cada endpoint.
+
 ## Instalación
 
 1. Clonar el repositorio:
