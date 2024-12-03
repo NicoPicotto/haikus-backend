@@ -91,4 +91,19 @@ const updateBudget = async (req: Request, res: Response) => {
    }
 };
 
-export { getAllBudgets, addBudget, deleteBudget, updateBudget };
+const getBudgetById = async (req: Request, res: Response) => {
+   const { id } = req.params;
+
+   try {
+      const budget = await Budget.getBudgetById(id);
+      res.status(200).json(budget);
+   } catch (error: any) {
+      console.error(error);
+      res.status(500).json({
+         message: "Error al obtener el presupuesto",
+         error: error.message,
+      });
+   }
+};
+
+export { getAllBudgets, addBudget, deleteBudget, updateBudget, getBudgetById };

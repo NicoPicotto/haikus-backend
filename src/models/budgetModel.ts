@@ -62,4 +62,17 @@ const updateBudget = async (id: string, data: Partial<BudgetBody>) => {
    }
 };
 
-export default { getAllBudgets, addBudget, deleteBudget, updateBudget };
+//Este es opcional pero funca
+const getBudgetById = async (id: string) => {
+   try {
+      const budget = await Budget.findById(id);
+      if (!budget) {
+         throw new Error("Presupuesto no encontrado");
+      }
+      return budget;
+   } catch (error) {
+      throw new Error("Error al obtener el presupuesto");
+   }
+};
+
+export default { getAllBudgets, addBudget, deleteBudget, updateBudget, getBudgetById };
