@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import UserBody from "../interfaces/userInterface";
+import { UserRegisterBody, UserLoginBody } from "../interfaces/userInterface";
 
 process.loadEnvFile();
 const JWT_SECRET: string = process.env.JWT_SECRET || "";
@@ -12,14 +12,13 @@ const userSchema = new mongoose.Schema(
       lastName: { type: String, required: true },
       email: { type: String, required: true, unique: true },
       password: { type: String, required: true },
-      role: { type: String, required: true },
    },
    { versionKey: false, timestamps: true }
 );
 
 const User = mongoose.model("User", userSchema);
 
-const register = async (data: UserBody) => {
+const register = async (data: UserRegisterBody) => {
    try {
       const hashedPassword = await bcrypt.hash(data.password, 10);
       const newUser = new User({
@@ -27,16 +26,15 @@ const register = async (data: UserBody) => {
          lastName: data.lastName,
          email: data.email,
          password: hashedPassword,
-      
       });
       await newUser.save();
       return newUser;
    } catch (error) {
-      throw new Error("Error al registrar usuario");
+      throw new Error("Error al registrar usuario model");
    }
 };
 
-const login = async (data: UserBody) => {
+const login = async (data: UserLoginBody) => {
    try {
       const user = await User.findOne({ email: data.email });
       if (!user) {
