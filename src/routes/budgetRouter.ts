@@ -3,10 +3,13 @@ import {
    getAllBudgets,
    addBudget,
    deleteBudget,
-   updateBudget
+   updateBudget,
 } from "../controllers/budgetController";
+import { authMiddleware } from "../middleware/authMiddleware";
 
 const budgetRouter = Router();
+
+budgetRouter.use(authMiddleware);
 
 budgetRouter.get("/", getAllBudgets);
 budgetRouter.post("/", addBudget);

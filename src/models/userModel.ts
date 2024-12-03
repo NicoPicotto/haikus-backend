@@ -50,7 +50,7 @@ const login = async (data: UserLoginBody) => {
       const token = jwt.sign({ id: user._id }, JWT_SECRET, {
          expiresIn: "2h",
       });
-      return { token, user };
+      return { token };
    } catch (error) {
       throw new Error("Error al autenticar usuario");
    }
