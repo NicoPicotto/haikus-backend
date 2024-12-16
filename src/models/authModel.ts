@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import { UserRegisterBody, UserLoginBody } from "../interfaces/userInterface";
+import { UserRegisterBody, UserLoginBody } from "../interfaces/authInterface";
 
 process.loadEnvFile();
 const JWT_SECRET: string = process.env.JWT_SECRET || "";

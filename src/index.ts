@@ -4,7 +4,7 @@ import budgetRouter from "./routes/budgetRouter";
 import cors from "cors";
 
 import { checkJWT } from "./middleware/envMiddleware";
-import userRouter from "./routes/userRouter";
+import authRouter from "./routes/authRouter";
 
 process.loadEnvFile();
 
@@ -19,7 +19,7 @@ app.use(checkJWT);
 connectDB();
 
 app.use("/api/budgets", budgetRouter);
-app.use("/api/users", userRouter);
+app.use("/api/auth", authRouter);
 
 app.listen(PORT, () => {
    console.log("Servidor en escucha por el puerto http://localhost:" + PORT);

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import User from "../models/userModel";
-import { UserRegisterBody, UserLoginBody } from "../interfaces/userInterface";
+import User from "../models/authModel";
+import { UserRegisterBody, UserLoginBody } from "../interfaces/authInterface";
 
 const register = async (req: Request, res: Response) => {
    const { firstName, lastName, email, password } = req.body;
