@@ -4,11 +4,13 @@ import haikusRouter from "./routes/haikusRouter";
 import authRouter from "./routes/authRouter";
 import userRouter from "./routes/userRouter";
 import cors from "cors";
+import { config } from "dotenv";
 
 import { checkJWT } from "./middleware/envMiddleware";
 
-if (process.loadEnvFile) {
-   process.loadEnvFile();
+// Cargar .env solo si no estás en producción
+if (process.env.NODE_ENV !== "production") {
+   config();
 }
 
 const PORT = process.env.PORT || 3000;

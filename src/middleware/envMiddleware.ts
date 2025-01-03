@@ -1,6 +1,9 @@
 import { Request, Response, NextFunction } from "express";
+import { config } from "dotenv";
 
-process.loadEnvFile();
+if (process.env.NODE_ENV !== "production") {
+   config();
+}
 
 const checkJWT = (req: Request, res: Response, next: NextFunction) => {
    const JWT_SECRET = process.env.JWT_SECRET;

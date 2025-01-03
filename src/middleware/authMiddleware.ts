@@ -1,7 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
+import { config } from "dotenv";
 
-process.loadEnvFile();
+if (process.env.NODE_ENV !== "production") {
+   config();
+}
 
 interface DecodedToken {
    id: string;
