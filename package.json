@@ -4,7 +4,7 @@
    "main": "index.js",
    "scripts": {
       "tsc": "tsc",
-      "start": "npm run tsc && node ./build/index.js",
+      "start": "NODE_ENV=production npm run tsc && node ./build/index.js",
       "dev": "ts-node-dev ./src/index.ts"
    },
    "keywords": [],
