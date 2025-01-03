@@ -1,26 +1,32 @@
 import { Request, Response, NextFunction } from "express";
-import jtw from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 process.loadEnvFile();
+
+interface DecodedToken {
+   id: string;
+   email: string;
+   firstName: string;
+   lastName: string;
+}
 
 const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
    const JWT_SECRET = process.env.JWT_SECRET;
    const token = req.headers.authorization?.replace("Bearer ", "");
 
    if (!token) {
-      res.status(401).json({
+      return res.status(401).json({
          error: "Se requiere estar autenticado para utilizar este servicio",
       });
-      return;
    }
 
    try {
-      const decodedToken = jtw.verify(token, JWT_SECRET || "");
-      (req as any).user = decodedToken;
+      const decodedToken = jwt.verify(token, JWT_SECRET || "") as DecodedToken;
+      (req as any).user = decodedToken; // Ahora contiene id, email, firstName, lastName
       next();
    } catch (error) {
-      res.status(401).json({
-         error: "No se ha proporcionado el token de autenticación",
+      return res.status(401).json({
+         error: "No se ha proporcionado un token válido de autenticación",
       });
    }
 };

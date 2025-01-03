@@ -1,3 +1,5 @@
+/// <reference path="../custom.d.ts" />
+
 import { Request, Response } from "express";
 import Haiku from "../models/haikuModel";
 import HaikuBody from "../interfaces/haikuInterface";
@@ -15,28 +17,42 @@ const getAllHaikus = async (req: Request, res: Response) => {
    }
 };
 
-const addHaiku = async (req: Request, res: Response): Promise<void> => {
-   const { text, author, date } = req.body;
+const addHaiku = async (req: Request, res: Response): Promise<Response> => {
+   const { text } = req.body;
 
    // Validar campos obligatorios
    if (!text) {
-      res.status(400).json({
+      return res.status(400).json({
          error: "Faltan datos obligatorios. Por favor, verificá todos los campos.",
       });
    }
 
+   // Obtener el author desde req.user
+   const user = req.user;
+   if (!user) {
+      return res.status(401).json({
+         error: "Usuario no autenticado",
+      });
+   }
+
+   const author = {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+   };
+
    const haikuBody: HaikuBody = {
       text,
       author,
-      date,
+      date: new Date(),
    };
 
    try {
       const newHaiku = await Haiku.addHaiku(haikuBody);
-      res.status(201).json(newHaiku);
+      return res.status(201).json(newHaiku);
    } catch (error: any) {
       console.error(error);
-      res.status(500).json({
+      return res.status(500).json({
          message: "Error al agregar el haiku",
          error: error.message,
       });

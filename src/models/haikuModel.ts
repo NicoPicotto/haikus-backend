@@ -4,7 +4,11 @@ import HaikuBody from "../interfaces/haikuInterface";
 const haikuSchema = new mongoose.Schema(
    {
       text: { type: String, required: true },
-      author: { type: Object, required: true },
+      author: {
+         firstName: { type: String, required: true },
+         lastName: { type: String, required: true },
+         email: { type: String, required: true },
+      },
       date: { type: Date, default: Date.now },
    },
    { versionKey: false, timestamps: true }
@@ -24,9 +28,12 @@ const getAllHaikus = async () => {
 const addHaiku = async (dataHaiku: HaikuBody) => {
    try {
       const newHaiku = new Haiku(dataHaiku);
-      await newHaiku.save();
+      await newHaiku.save(); // Aquí ocurre el problema
       return newHaiku;
    } catch (error) {
+      if (error instanceof Error) {
+         throw new Error("Error al crear haiku");
+      }
       throw new Error("Error al crear haiku");
    }
 };

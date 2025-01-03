@@ -20,9 +20,16 @@ export const register = async (req: Request, res: Response) => {
 export const login = async (req: Request, res: Response) => {
    try {
       const user = await userModel.loginUser(req.body);
-      const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, {
-         expiresIn: "2h",
-      });
+      const token = jwt.sign(
+         {
+            id: user._id,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+         },
+         JWT_SECRET,
+         { expiresIn: "2h" }
+      );
       return res.status(200).json({ token });
    } catch (error: any) {
       return res.status(400).json({ error: error.message });
