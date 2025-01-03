@@ -1,6 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 
-process.loadEnvFile();
+// Cargar el archivo .env solo en desarrollo
+if (process.env.NODE_ENV !== "production" && process.loadEnvFile) {
+   process.loadEnvFile();
+}
 
 const checkJWT = (req: Request, res: Response, next: NextFunction) => {
    const JWT_SECRET = process.env.JWT_SECRET;

@@ -1,7 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
-process.loadEnvFile();
+// Cargar el archivo .env solo en desarrollo
+if (process.env.NODE_ENV !== "production" && process.loadEnvFile) {
+   process.loadEnvFile();
+}
 
 interface DecodedToken {
    id: string;
