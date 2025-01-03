@@ -1,8 +1,7 @@
 import { connectDB } from "./config/mongo";
 import express from "express";
-import budgetRouter from "./routes/budgetRouter";
+import haikusRouter from "./routes/haikusRouter";
 import authRouter from "./routes/authRouter";
-import clientRouter from "./routes/clientRouter";
 import userRouter from "./routes/userRouter";
 import cors from "cors";
 
@@ -20,9 +19,8 @@ app.use(checkJWT);
 
 connectDB();
 
-app.use("/api/budgets", budgetRouter);
+app.use("/api/haikus", haikusRouter);
 app.use("/api/auth", authRouter);
-app.use("/api/clients", clientRouter);
 app.use("/api/users", userRouter);
 
 app.listen(PORT, () => {

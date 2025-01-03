@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import BudgetBody from "../interfaces/budgetInterface";
+import HaikuBody from '../interfaces/haikuInterface';
 
-const budgetSchema = new mongoose.Schema(
+const haikuSchema = new mongoose.Schema(
    {
       title: { type: String, required: true, unique: true },
       client: { type: String, required: true },
@@ -13,66 +13,66 @@ const budgetSchema = new mongoose.Schema(
    { versionKey: false, timestamps: true }
 );
 
-const Budget = mongoose.model("Budget", budgetSchema);
+const Haiku = mongoose.model("Haiku", haikuSchema);
 
-const getAllBudgets = async () => {
+const getAllHaikus = async () => {
    try {
-      const budgets = await Budget.find();
-      return budgets;
+      const haikus = await Haiku.find();
+      return haikus;
    } catch (error) {
       throw new Error("Error al obtener los presupuestos");
    }
 };
 
-const addBudget = async (dataBudget: BudgetBody) => {
+const addHaiku = async (dataHaiku: HaikuBody) => {
    try {
-      const newBudget = new Budget(dataBudget);
-      await newBudget.save();
-      return newBudget;
+      const newHaiku = new Haiku(dataHaiku);
+      await newHaiku.save();
+      return newHaiku;
    } catch (error) {
       throw new Error("Error al crear presupuesto");
    }
 };
 
-const deleteBudget = async (id: string) => {
+const deleteHaiku = async (id: string) => {
    try {
-      const deletedBudget = await Budget.findByIdAndDelete(id);
-      if (!deletedBudget) {
+      const deletedHaiku = await Haiku.findByIdAndDelete(id);
+      if (!deletedHaiku) {
          throw new Error("Presupuesto no encontrado");
       }
-      return deletedBudget;
+      return deletedHaiku;
    } catch (error) {
       throw new Error("Error al eliminar presupuesto");
    }
 };
 
-const updateBudget = async (id: string, data: Partial<BudgetBody>) => {
+const updateHaiku = async (id: string, data: Partial<HaikuBody>) => {
    try {
-      const updatedBudget = await Budget.findByIdAndUpdate(
+      const updatedHaiku = await Haiku.findByIdAndUpdate(
          id,
          { $set: data },
          { new: true, runValidators: true }
       );
-      if (!updatedBudget) {
+      if (!updatedHaiku) {
          throw new Error("Presupuesto no encontrado");
       }
-      return updatedBudget;
+      return updatedHaiku;
    } catch (error) {
       throw new Error("Error al actualizar el presupuesto");
    }
 };
 
 //Este es opcional pero funca
-const getBudgetById = async (id: string) => {
+const getHaikuById = async (id: string) => {
    try {
-      const budget = await Budget.findById(id);
-      if (!budget) {
+      const haiku = await Haiku.findById(id);
+      if (!haiku) {
          throw new Error("Presupuesto no encontrado");
       }
-      return budget;
+      return haiku;
    } catch (error) {
       throw new Error("Error al obtener el presupuesto");
    }
 };
 
-export default { getAllBudgets, addBudget, deleteBudget, updateBudget, getBudgetById };
+export default { getAllHaikus, addHaiku, deleteHaiku, updateHaiku, getHaikuById };

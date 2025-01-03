@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import Budget from "../models/budgetModel";
-import BudgetBody from "../interfaces/budgetInterface";
+import Haiku from "../models/haikuModel";
+import HaikuBody from "../interfaces/haikuInterface";
 
-const getAllBudgets = async (req: Request, res: Response) => {
+const getAllHaikus = async (req: Request, res: Response) => {
    try {
-      const budgets = await Budget.getAllBudgets();
-      res.status(200).json(budgets);
+      const haikus = await Haiku.getAllHaikus();
+      res.status(200).json(haikus);
    } catch (error: any) {
       console.error(error);
       res.status(500).json({
@@ -15,35 +15,25 @@ const getAllBudgets = async (req: Request, res: Response) => {
    }
 };
 
-const addBudget = async (req: Request, res: Response): Promise<void> => {
-   const { title, client, project, items, amount, date } = req.body;
+const addHaiku = async (req: Request, res: Response): Promise<void> => {
+   const { text, author, date } = req.body;
 
    // Validar campos obligatorios
-   if (!title || !client || !project || !items || !amount) {
+   if (text) {
       res.status(400).json({
          error: "Faltan datos obligatorios. Por favor, verificá todos los campos.",
       });
    }
 
-   // Validar formato de `items` (debe ser un array no vacío)
-   if (!Array.isArray(items) || items.length === 0) {
-      res.status(400).json({
-         error: "El campo 'items' debe ser un array no vacío.",
-      });
-   }
-
-   const budgetBody: BudgetBody = {
-      title,
-      client,
-      project,
-      items,
-      amount,
+   const haikuBody: HaikuBody = {
+      text,
+      author,
       date,
    };
 
    try {
-      const newBudget = await Budget.addBudget(budgetBody);
-      res.status(201).json(newBudget);
+      const newHaiku = await Haiku.addHaiku(haikuBody);
+      res.status(201).json(newHaiku);
    } catch (error: any) {
       console.error(error);
       res.status(500).json({
@@ -53,15 +43,15 @@ const addBudget = async (req: Request, res: Response): Promise<void> => {
    }
 };
 
-const deleteBudget = async (req: Request, res: Response) => {
+const deleteHaiku = async (req: Request, res: Response) => {
    const { id } = req.params;
 
    try {
-      const deletedBudget = await Budget.deleteBudget(id);
+      const deletedHaiku = await Haiku.deleteHaiku(id);
 
       res.status(200).json({
          message: "Presupuesto eliminado con éxito",
-         deletedBudget,
+         deletedHaiku,
       });
    } catch (error: any) {
       console.error(error);
@@ -72,15 +62,15 @@ const deleteBudget = async (req: Request, res: Response) => {
    }
 };
 
-const updateBudget = async (req: Request, res: Response) => {
+const updateHaiku = async (req: Request, res: Response) => {
    const { id } = req.params;
    const data = req.body;
 
    try {
-      const updatedBudget = await Budget.updateBudget(id, data);
+      const updatedHaiku = await Haiku.updateHaiku(id, data);
       res.status(200).json({
          message: "Presupuesto actualizado con éxito",
-         updatedBudget,
+         updatedHaiku,
       });
    } catch (error: any) {
       console.error(error);
@@ -91,12 +81,12 @@ const updateBudget = async (req: Request, res: Response) => {
    }
 };
 
-const getBudgetById = async (req: Request, res: Response) => {
+const getHaikuById = async (req: Request, res: Response) => {
    const { id } = req.params;
 
    try {
-      const budget = await Budget.getBudgetById(id);
-      res.status(200).json(budget);
+      const haiku = await Haiku.getHaikuById(id);
+      res.status(200).json(haiku);
    } catch (error: any) {
       console.error(error);
       res.status(500).json({
@@ -106,4 +96,4 @@ const getBudgetById = async (req: Request, res: Response) => {
    }
 };
 
-export { getAllBudgets, addBudget, deleteBudget, updateBudget, getBudgetById };
+export { getAllHaikus, addHaiku, deleteHaiku, updateHaiku, getHaikuById };
