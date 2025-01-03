@@ -1,5 +1,5 @@
 export default interface HaikuBody {
    text: string;
-   author: string;
+   author: Object;
    date: Date;
 }

@@ -1,13 +1,10 @@
 import mongoose from "mongoose";
-import HaikuBody from '../interfaces/haikuInterface';
+import HaikuBody from "../interfaces/haikuInterface";
 
 const haikuSchema = new mongoose.Schema(
    {
-      title: { type: String, required: true, unique: true },
-      client: { type: String, required: true },
-      project: { type: String, required: true },
-      items: { type: Array, required: true },
-      amount: { type: Number, required: true },
+      text: { type: String, required: true },
+      author: { type: Object, required: true },
       date: { type: Date, default: Date.now },
    },
    { versionKey: false, timestamps: true }
@@ -20,7 +17,7 @@ const getAllHaikus = async () => {
       const haikus = await Haiku.find();
       return haikus;
    } catch (error) {
-      throw new Error("Error al obtener los presupuestos");
+      throw new Error("Error al obtener los haikus");
    }
 };
 
@@ -30,7 +27,7 @@ const addHaiku = async (dataHaiku: HaikuBody) => {
       await newHaiku.save();
       return newHaiku;
    } catch (error) {
-      throw new Error("Error al crear presupuesto");
+      throw new Error("Error al crear haiku");
    }
 };
 
@@ -38,11 +35,11 @@ const deleteHaiku = async (id: string) => {
    try {
       const deletedHaiku = await Haiku.findByIdAndDelete(id);
       if (!deletedHaiku) {
-         throw new Error("Presupuesto no encontrado");
+         throw new Error("haiku no encontrado");
       }
       return deletedHaiku;
    } catch (error) {
-      throw new Error("Error al eliminar presupuesto");
+      throw new Error("Error al eliminar haiku");
    }
 };
 
@@ -54,11 +51,11 @@ const updateHaiku = async (id: string, data: Partial<HaikuBody>) => {
          { new: true, runValidators: true }
       );
       if (!updatedHaiku) {
-         throw new Error("Presupuesto no encontrado");
+         throw new Error("haiku no encontrado");
       }
       return updatedHaiku;
    } catch (error) {
-      throw new Error("Error al actualizar el presupuesto");
+      throw new Error("Error al actualizar el haiku");
    }
 };
 
@@ -67,12 +64,18 @@ const getHaikuById = async (id: string) => {
    try {
       const haiku = await Haiku.findById(id);
       if (!haiku) {
-         throw new Error("Presupuesto no encontrado");
+         throw new Error("haiku no encontrado");
       }
       return haiku;
    } catch (error) {
-      throw new Error("Error al obtener el presupuesto");
+      throw new Error("Error al obtener el haiku");
    }
 };
 
-export default { getAllHaikus, addHaiku, deleteHaiku, updateHaiku, getHaikuById };
+export default {
+   getAllHaikus,
+   addHaiku,
+   deleteHaiku,
+   updateHaiku,
+   getHaikuById,
+};

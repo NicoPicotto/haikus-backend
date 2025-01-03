@@ -9,7 +9,7 @@ const getAllHaikus = async (req: Request, res: Response) => {
    } catch (error: any) {
       console.error(error);
       res.status(500).json({
-         message: "Error al obtener los presupuestos",
+         message: "Error al obtener los haikus",
          error: error.message,
       });
    }
@@ -19,7 +19,7 @@ const addHaiku = async (req: Request, res: Response): Promise<void> => {
    const { text, author, date } = req.body;
 
    // Validar campos obligatorios
-   if (text) {
+   if (!text) {
       res.status(400).json({
          error: "Faltan datos obligatorios. Por favor, verificá todos los campos.",
       });
@@ -37,7 +37,7 @@ const addHaiku = async (req: Request, res: Response): Promise<void> => {
    } catch (error: any) {
       console.error(error);
       res.status(500).json({
-         message: "Error al agregar el presupuesto",
+         message: "Error al agregar el haiku",
          error: error.message,
       });
    }
@@ -50,13 +50,13 @@ const deleteHaiku = async (req: Request, res: Response) => {
       const deletedHaiku = await Haiku.deleteHaiku(id);
 
       res.status(200).json({
-         message: "Presupuesto eliminado con éxito",
+         message: "haiku eliminado con éxito",
          deletedHaiku,
       });
    } catch (error: any) {
       console.error(error);
       res.status(500).json({
-         message: "Error al eliminar el presupuesto",
+         message: "Error al eliminar el haiku",
          error: error.message,
       });
    }
@@ -69,13 +69,13 @@ const updateHaiku = async (req: Request, res: Response) => {
    try {
       const updatedHaiku = await Haiku.updateHaiku(id, data);
       res.status(200).json({
-         message: "Presupuesto actualizado con éxito",
+         message: "haiku actualizado con éxito",
          updatedHaiku,
       });
    } catch (error: any) {
       console.error(error);
       res.status(500).json({
-         message: "Error al actualizar el presupuesto",
+         message: "Error al actualizar el haiku",
          error: error.message,
       });
    }
@@ -90,7 +90,7 @@ const getHaikuById = async (req: Request, res: Response) => {
    } catch (error: any) {
       console.error(error);
       res.status(500).json({
-         message: "Error al obtener el presupuesto",
+         message: "Error al obtener el haiku",
          error: error.message,
       });
    }
