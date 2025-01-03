@@ -7,7 +7,9 @@ import cors from "cors";
 
 import { checkJWT } from "./middleware/envMiddleware";
 
-process.loadEnvFile();
+if (process.loadEnvFile) {
+   process.loadEnvFile();
+}
 
 const PORT = process.env.PORT || 3000;
 
