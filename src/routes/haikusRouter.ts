@@ -10,12 +10,13 @@ import { authMiddleware } from "../middleware/authMiddleware";
 
 const haikusRouter = Router();
 
-haikusRouter.use(authMiddleware);
-
+// Rutas públicas (no requieren autenticación)
 haikusRouter.get("/", getAllHaikus);
 haikusRouter.get("/:id", getHaikuById);
-haikusRouter.post("/", addHaiku);
-haikusRouter.delete("/:id", deleteHaiku);
-haikusRouter.put("/:id", updateHaiku);
+
+// Rutas protegidas (requieren autenticación)
+haikusRouter.post("/", authMiddleware, addHaiku);
+haikusRouter.delete("/:id", authMiddleware, deleteHaiku);
+haikusRouter.put("/:id", authMiddleware, updateHaiku);
 
 export default haikusRouter;
