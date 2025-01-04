@@ -8,9 +8,29 @@ const JWT_SECRET = process.env.JWT_SECRET || "";
 export const register = async (req: Request, res: Response) => {
    try {
       const user = await userModel.addUser(req.body);
-      return res
-         .status(201)
-         .json({ message: "Usuario registrado", id: user._id });
+
+      // Generar token JWT
+      const token = jwt.sign(
+         {
+            id: user._id,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+         },
+         JWT_SECRET,
+         { expiresIn: "2h" }
+      );
+
+      return res.status(201).json({
+         message: "Usuario registrado",
+         token,
+         user: {
+            id: user._id,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+         },
+      });
    } catch (error: any) {
       return res.status(400).json({ error: error.message });
    }

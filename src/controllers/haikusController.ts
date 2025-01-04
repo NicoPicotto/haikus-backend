@@ -128,6 +128,19 @@ const getHaikusByUser = async (req: Request, res: Response) => {
    }
 };
 
+const getHaikuOfTheDay = async (req: Request, res: Response) => {
+   try {
+      const haiku = await Haiku.getHaikuOfTheDay(); // Llamada correcta al modelo
+      res.status(200).json(haiku);
+   } catch (error: any) {
+      console.error("Error al obtener el Haiku del día (Controlador):", error);
+      res.status(500).json({
+         message: "Error al obtener el Haiku del día",
+         error: error.message,
+      });
+   }
+};
+
 export {
    getAllHaikus,
    addHaiku,
@@ -135,4 +148,5 @@ export {
    updateHaiku,
    getHaikuById,
    getHaikusByUser,
+   getHaikuOfTheDay,
 };

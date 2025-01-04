@@ -11,8 +11,8 @@ import { authMiddleware } from "../middleware/authMiddleware";
 const userRouter = Router();
 
 userRouter.get("/:id", getUserById);
+userRouter.get("/", getAllUsers);
 
-userRouter.get("/", getAllUsers, authMiddleware);
 userRouter.post("/", addUser, authMiddleware);
 userRouter.put("/:id", updateUser, authMiddleware);
 userRouter.delete("/:id", deleteUser, authMiddleware);

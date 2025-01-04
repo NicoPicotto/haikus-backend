@@ -1,6 +1,9 @@
 import mongoose from "mongoose";
 import HaikuBody from "../interfaces/haikuInterface";
 
+let cachedHaiku: any = null;
+let lastUpdated: Date | null = null;
+
 const haikuSchema = new mongoose.Schema(
    {
       text: { type: String, required: true },
@@ -19,7 +22,7 @@ const Haiku = mongoose.model("Haiku", haikuSchema);
 
 const getAllHaikus = async () => {
    try {
-      const haikus = await Haiku.find();
+      const haikus = await Haiku.find().sort({ createdAt: -1 });
       return haikus;
    } catch (error) {
       throw new Error("Error al obtener los haikus");
@@ -81,7 +84,39 @@ const getHaikuById = async (id: string) => {
 };
 
 const getHaikusByUser = async (userId: string) => {
-   return await Haiku.find({ "author.id": userId });
+   return await Haiku.find({ "author.id": userId }).sort({ createdAt: -1 });
+};
+
+const getHaikuOfTheDay = async () => {
+   const today = new Date().toISOString().split("T")[0];
+   const todayDate = new Date(today);
+
+   console.log("Fecha actual:", today);
+
+   if (cachedHaiku && lastUpdated?.toISOString().split("T")[0] === today) {
+      console.log("Devolviendo Haiku en caché:", cachedHaiku);
+      return cachedHaiku;
+   }
+
+   try {
+      const haikus = await Haiku.find(); // Asegúrate de que esto devuelve datos
+      console.log("Haikus encontrados:", haikus);
+
+      if (haikus.length === 0) {
+         console.error("No hay Haikus disponibles.");
+         throw new Error("No hay Haikus disponibles.");
+      }
+
+      const randomIndex = Math.floor(Math.random() * haikus.length);
+      cachedHaiku = haikus[randomIndex];
+      lastUpdated = todayDate;
+
+      console.log("Haiku seleccionado:", cachedHaiku);
+      return cachedHaiku;
+   } catch (error) {
+      console.error("Error en el modelo getHaikuOfTheDay:", error);
+      throw new Error("Error al obtener el Haiku del día.");
+   }
 };
 
 export default {
@@ -91,4 +126,5 @@ export default {
    updateHaiku,
    getHaikuById,
    getHaikusByUser,
+   getHaikuOfTheDay,
 };

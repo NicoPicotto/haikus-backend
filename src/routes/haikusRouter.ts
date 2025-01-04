@@ -6,13 +6,16 @@ import {
    updateHaiku,
    getHaikuById,
    getHaikusByUser,
+   getHaikuOfTheDay,
 } from "../controllers/haikusController";
 import { authMiddleware } from "../middleware/authMiddleware";
 
 const haikusRouter = Router();
 
 // Rutas públicas (no requieren autenticación)
+
 haikusRouter.get("/", getAllHaikus);
+haikusRouter.get("/daily", getHaikuOfTheDay);
 haikusRouter.get("/:id", getHaikuById);
 haikusRouter.get("/user/:id", getHaikusByUser);
 
