@@ -5,6 +5,7 @@ const haikuSchema = new mongoose.Schema(
    {
       text: { type: String, required: true },
       author: {
+         id: { type: String, required: true },
          firstName: { type: String, required: true },
          lastName: { type: String, required: true },
          email: { type: String, required: true },
@@ -79,10 +80,15 @@ const getHaikuById = async (id: string) => {
    }
 };
 
+const getHaikusByUser = async (userId: string) => {
+   return await Haiku.find({ "author.id": userId });
+};
+
 export default {
    getAllHaikus,
    addHaiku,
    deleteHaiku,
    updateHaiku,
    getHaikuById,
+   getHaikusByUser,
 };

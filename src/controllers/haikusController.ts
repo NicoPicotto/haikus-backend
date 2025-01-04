@@ -1,8 +1,8 @@
 /// <reference path="../custom.d.ts" />
 
 import { Request, Response } from "express";
-import Haiku from "../models/haikuModel";
 import HaikuBody from "../interfaces/haikuInterface";
+import Haiku from "../models/haikuModel";
 
 const getAllHaikus = async (req: Request, res: Response) => {
    try {
@@ -36,6 +36,7 @@ const addHaiku = async (req: Request, res: Response): Promise<Response> => {
    }
 
    const author = {
+      id: user.id,
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
@@ -112,4 +113,26 @@ const getHaikuById = async (req: Request, res: Response) => {
    }
 };
 
-export { getAllHaikus, addHaiku, deleteHaiku, updateHaiku, getHaikuById };
+const getHaikusByUser = async (req: Request, res: Response) => {
+   const { id } = req.params;
+
+   try {
+      const haikus = await Haiku.getHaikusByUser(id);
+      res.status(200).json(haikus);
+   } catch (error: any) {
+      console.error("Error al obtener los Haikus por usuario:", error);
+      res.status(500).json({
+         message: "Error al obtener los Haikus del usuario",
+         error: error.message,
+      });
+   }
+};
+
+export {
+   getAllHaikus,
+   addHaiku,
+   deleteHaiku,
+   updateHaiku,
+   getHaikuById,
+   getHaikusByUser,
+};
