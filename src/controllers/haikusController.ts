@@ -168,6 +168,33 @@ const toggleSaveHaiku = async (req: Request, res: Response) => {
    }
 };
 
+const toggleLike = async (req: Request, res: Response) => {
+   const userId = req.user?.id; // ID del usuario autenticado
+   const { id: haikuId } = req.params; // ID del Haiku
+
+   if (!userId) {
+      return res.status(401).json({ error: "Usuario no autenticado" });
+   }
+
+   try {
+      // Llamar a la función del modelo para manejar el like
+      const result = await Haiku.toggleLikeHaiku(haikuId, userId);
+
+      res.status(200).json({
+         message: result.liked
+            ? "Haiku likedeado con éxito"
+            : "Like eliminado del Haiku",
+         likesCount: result.likesCount,
+         liked: result.liked,
+      });
+   } catch (error: any) {
+      console.error("Error al togglear el like del Haiku:", error.message);
+      res.status(500).json({
+         message: "Error al togglear el like del Haiku",
+         error: error.message,
+      });
+   }
+};
 
 export {
    getAllHaikus,
@@ -178,4 +205,5 @@ export {
    getHaikusByUser,
    getHaikuOfTheDay,
    toggleSaveHaiku,
+   toggleLike,
 };

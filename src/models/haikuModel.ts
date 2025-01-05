@@ -14,6 +14,7 @@ const haikuSchema = new mongoose.Schema(
          email: { type: String, required: true },
       },
       date: { type: Date, default: Date.now },
+      likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
    },
    { versionKey: false, timestamps: true }
 );
@@ -152,6 +153,35 @@ const toggleSaveHaiku = async (userId: string, haikuId: string) => {
    }
 };
 
+const toggleLikeHaiku = async (haikuId: string, userId: string) => {
+   try {
+      const haiku = await Haiku.findById(haikuId);
+
+      if (!haiku) {
+         throw new Error("Haiku no encontrado");
+      }
+
+      // Convertir userId a ObjectId
+      const userObjectId = new mongoose.Types.ObjectId(userId);
+
+      const alreadyLiked = haiku.likes.some((id) => id.equals(userObjectId));
+
+      if (alreadyLiked) {
+         // Eliminar el like
+         haiku.likes = haiku.likes.filter((id) => !id.equals(userObjectId));
+      } else {
+         // Añadir el like
+         haiku.likes.push(userObjectId);
+      }
+
+      await haiku.save();
+      return { likesCount: haiku.likes.length, liked: !alreadyLiked };
+   } catch (error) {
+      console.error("Error en toggleLikeHaiku:", error);
+      throw new Error("Error al actualizar el like del Haiku");
+   }
+};
+
 export default {
    getAllHaikus,
    addHaiku,
@@ -160,5 +190,6 @@ export default {
    getHaikuById,
    getHaikusByUser,
    getHaikuOfTheDay,
-   toggleSaveHaiku
+   toggleSaveHaiku,
+   toggleLikeHaiku,
 };

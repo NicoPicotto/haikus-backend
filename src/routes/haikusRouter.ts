@@ -8,6 +8,7 @@ import {
    getHaikusByUser,
    getHaikuOfTheDay,
    toggleSaveHaiku,
+   toggleLike
 } from "../controllers/haikusController";
 import { getSavedHaikus } from "../controllers/userController";
 import { authMiddleware } from "../middleware/authMiddleware";
@@ -26,7 +27,7 @@ haikusRouter.get("/user/:id", getHaikusByUser);
 haikusRouter.post("/", authMiddleware, addHaiku);
 haikusRouter.delete("/:id", authMiddleware, deleteHaiku);
 haikusRouter.put("/:id", authMiddleware, updateHaiku);
-
 haikusRouter.patch("/save/:id", authMiddleware, toggleSaveHaiku);
+haikusRouter.patch("/:id/like", authMiddleware, toggleLike);
 
 export default haikusRouter;
