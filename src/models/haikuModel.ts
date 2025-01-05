@@ -119,6 +119,39 @@ const getHaikuOfTheDay = async () => {
    }
 };
 
+const toggleSaveHaiku = async (userId: string, haikuId: string) => {
+   try {
+      // Obtener el usuario
+      const User = mongoose.model("User"); // Modelo de usuario
+      const user = await User.findById(userId);
+
+      if (!user) {
+         throw new Error("Usuario no encontrado");
+      }
+
+      // Verificar si el Haiku ya está guardado
+      const isAlreadySaved = user.savedHaikus.includes(haikuId);
+
+      if (isAlreadySaved) {
+         // Eliminar el Haiku de la lista de guardados
+         user.savedHaikus = user.savedHaikus.filter(
+            (savedId: string) => savedId !== haikuId
+         );
+      } else {
+         // Añadir el Haiku a la lista de guardados
+         user.savedHaikus.push(haikuId);
+      }
+
+      // Guardar los cambios en el usuario
+      await user.save();
+
+      return { isSaved: !isAlreadySaved };
+   } catch (error) {
+      console.error("Error en toggleSaveHaiku:", error);
+      throw new Error("Error al guardar/desguardar el Haiku");
+   }
+};
+
 export default {
    getAllHaikus,
    addHaiku,
@@ -127,4 +160,5 @@ export default {
    getHaikuById,
    getHaikusByUser,
    getHaikuOfTheDay,
+   toggleSaveHaiku
 };

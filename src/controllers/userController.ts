@@ -114,4 +114,32 @@ const deleteUser = async (req: Request, res: Response) => {
    }
 };
 
-export { getAllUsers, getUserById, addUser, updateUser, deleteUser };
+const getSavedHaikus = async (req: Request, res: Response) => {
+   const userId = req.user?.id;
+
+   if (!userId) {
+      console.error("Usuario no autenticado");
+      return res.status(401).json({ error: "Usuario no autenticado" });
+   }
+
+   try {
+      const savedHaikus = await userModel.getSavedHaikus(userId);
+
+      res.status(200).json(savedHaikus);
+   } catch (error: any) {
+      console.error("Error al obtener Haikus guardados:", error.message);
+      res.status(500).json({
+         message: "Error al obtener los Haikus guardados",
+         error: error.message,
+      });
+   }
+};
+
+export {
+   getAllUsers,
+   getUserById,
+   addUser,
+   updateUser,
+   deleteUser,
+   getSavedHaikus,
+};

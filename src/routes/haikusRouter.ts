@@ -7,7 +7,9 @@ import {
    getHaikuById,
    getHaikusByUser,
    getHaikuOfTheDay,
+   toggleSaveHaiku,
 } from "../controllers/haikusController";
+import { getSavedHaikus } from "../controllers/userController";
 import { authMiddleware } from "../middleware/authMiddleware";
 
 const haikusRouter = Router();
@@ -16,6 +18,7 @@ const haikusRouter = Router();
 
 haikusRouter.get("/", getAllHaikus);
 haikusRouter.get("/daily", getHaikuOfTheDay);
+haikusRouter.get("/saved", authMiddleware, getSavedHaikus);
 haikusRouter.get("/:id", getHaikuById);
 haikusRouter.get("/user/:id", getHaikusByUser);
 
@@ -23,5 +26,7 @@ haikusRouter.get("/user/:id", getHaikusByUser);
 haikusRouter.post("/", authMiddleware, addHaiku);
 haikusRouter.delete("/:id", authMiddleware, deleteHaiku);
 haikusRouter.put("/:id", authMiddleware, updateHaiku);
+
+haikusRouter.patch("/save/:id", authMiddleware, toggleSaveHaiku);
 
 export default haikusRouter;

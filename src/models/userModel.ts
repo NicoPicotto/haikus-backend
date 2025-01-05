@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema(
       lastName: { type: String, required: true },
       email: { type: String, required: true, unique: true },
       password: { type: String, required: true },
+      savedHaikus: [{ type: mongoose.Schema.Types.ObjectId, ref: "Haiku" }],
    },
    { versionKey: false, timestamps: true }
 );
@@ -97,6 +98,22 @@ const loginUser = async (data: UserLoginBody) => {
    }
 };
 
+const getSavedHaikus = async (userId: string) => {
+   try {
+      const user = await User.findById(userId).populate("savedHaikus");
+
+      if (!user) {
+         console.error("Usuario no encontrado");
+         throw new Error("Usuario no encontrado");
+      }
+
+      return user.savedHaikus;
+   } catch (error) {
+      console.error("Error en getSavedHaikus (modelo):", error);
+      throw new Error("Error al obtener los Haikus guardados");
+   }
+};
+
 export default {
    getAllUsers,
    getUserById,
@@ -104,4 +121,5 @@ export default {
    deleteUser,
    updateUser,
    loginUser,
+   getSavedHaikus,
 };

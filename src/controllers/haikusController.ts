@@ -141,6 +141,34 @@ const getHaikuOfTheDay = async (req: Request, res: Response) => {
    }
 };
 
+const toggleSaveHaiku = async (req: Request, res: Response) => {
+   const userId = req.user?.id; // Obtener el ID del usuario autenticado
+   const { id: haikuId } = req.params; // ID del Haiku a guardar/desguardar
+
+   if (!userId) {
+      return res.status(401).json({ error: "Usuario no autenticado" });
+   }
+
+   try {
+      // Llamada al modelo para guardar o desguardar el Haiku
+      const result = await Haiku.toggleSaveHaiku(userId, haikuId);
+
+      res.status(200).json({
+         message: result.isSaved
+            ? "Haiku guardado con éxito"
+            : "Haiku eliminado de guardados",
+         haikuId,
+      });
+   } catch (error: any) {
+      console.error("Error al guardar/desguardar el Haiku:", error);
+      res.status(500).json({
+         message: "Error al guardar/desguardar el Haiku",
+         error: error.message,
+      });
+   }
+};
+
+
 export {
    getAllHaikus,
    addHaiku,
@@ -149,4 +177,5 @@ export {
    getHaikuById,
    getHaikusByUser,
    getHaikuOfTheDay,
+   toggleSaveHaiku,
 };
