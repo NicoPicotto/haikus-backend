@@ -57,6 +57,7 @@ export const login = async (req: Request, res: Response) => {
             email: user.email,
             firstName: user.firstName,
             lastName: user.lastName,
+            savedHaikus: user.savedHaikus || [],
          },
       });
    } catch (error: any) {

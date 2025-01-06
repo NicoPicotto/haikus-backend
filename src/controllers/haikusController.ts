@@ -158,6 +158,7 @@ const toggleSaveHaiku = async (req: Request, res: Response) => {
             ? "Haiku guardado con éxito"
             : "Haiku eliminado de guardados",
          haikuId,
+         isSaved: result.isSaved,
       });
    } catch (error: any) {
       console.error("Error al guardar/desguardar el Haiku:", error);

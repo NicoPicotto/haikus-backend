@@ -15,6 +15,7 @@ const haikuSchema = new mongoose.Schema(
       },
       date: { type: Date, default: Date.now },
       likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+      savedBy: { type: [String], default: [] },
    },
    { versionKey: false, timestamps: true }
 );
@@ -122,29 +123,34 @@ const getHaikuOfTheDay = async () => {
 
 const toggleSaveHaiku = async (userId: string, haikuId: string) => {
    try {
-      // Obtener el usuario
       const User = mongoose.model("User"); // Modelo de usuario
       const user = await User.findById(userId);
+      const haiku = await Haiku.findById(haikuId);
 
-      if (!user) {
-         throw new Error("Usuario no encontrado");
+      if (!user || !haiku) {
+         throw new Error("Usuario o Haiku no encontrado");
       }
 
-      // Verificar si el Haiku ya está guardado
       const isAlreadySaved = user.savedHaikus.includes(haikuId);
 
       if (isAlreadySaved) {
-         // Eliminar el Haiku de la lista de guardados
+         // Eliminar el Haiku de la lista de guardados del usuario y del Haiku
          user.savedHaikus = user.savedHaikus.filter(
-            (savedId: string) => savedId !== haikuId
+            (savedId: string) => savedId.toString() !== haikuId.toString()
+         );
+         haiku.savedBy = haiku.savedBy.filter(
+            (savedUserId: string) =>
+               savedUserId.toString() !== userId.toString()
          );
       } else {
-         // Añadir el Haiku a la lista de guardados
+         // Añadir el Haiku a la lista de guardados del usuario y del Haiku
          user.savedHaikus.push(haikuId);
+         haiku.savedBy.push(userId);
       }
 
-      // Guardar los cambios en el usuario
-      await user.save();
+      // Guardar los cambios en ambos modelos
+      await user.save(); // Asegúrate de guardar al usuario
+      await haiku.save(); // Asegúrate de guardar el haiku
 
       return { isSaved: !isAlreadySaved };
    } catch (error) {
