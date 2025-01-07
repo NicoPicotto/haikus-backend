@@ -123,7 +123,7 @@ const getHaikuOfTheDay = async () => {
 
 const toggleSaveHaiku = async (userId: string, haikuId: string) => {
    try {
-      const User = mongoose.model("User"); // Modelo de usuario
+      const User = mongoose.model("User");
       const user = await User.findById(userId);
       const haiku = await Haiku.findById(haikuId);
 
@@ -134,7 +134,6 @@ const toggleSaveHaiku = async (userId: string, haikuId: string) => {
       const isAlreadySaved = user.savedHaikus.includes(haikuId);
 
       if (isAlreadySaved) {
-         // Eliminar el Haiku de la lista de guardados del usuario y del Haiku
          user.savedHaikus = user.savedHaikus.filter(
             (savedId: string) => savedId.toString() !== haikuId.toString()
          );
@@ -143,14 +142,12 @@ const toggleSaveHaiku = async (userId: string, haikuId: string) => {
                savedUserId.toString() !== userId.toString()
          );
       } else {
-         // Añadir el Haiku a la lista de guardados del usuario y del Haiku
          user.savedHaikus.push(haikuId);
          haiku.savedBy.push(userId);
       }
 
-      // Guardar los cambios en ambos modelos
-      await user.save(); // Asegúrate de guardar al usuario
-      await haiku.save(); // Asegúrate de guardar el haiku
+      await user.save();
+      await haiku.save(); 
 
       return { isSaved: !isAlreadySaved };
    } catch (error) {
@@ -167,16 +164,13 @@ const toggleLikeHaiku = async (haikuId: string, userId: string) => {
          throw new Error("Haiku no encontrado");
       }
 
-      // Convertir userId a ObjectId
       const userObjectId = new mongoose.Types.ObjectId(userId);
 
       const alreadyLiked = haiku.likes.some((id) => id.equals(userObjectId));
 
       if (alreadyLiked) {
-         // Eliminar el like
          haiku.likes = haiku.likes.filter((id) => !id.equals(userObjectId));
       } else {
-         // Añadir el like
          haiku.likes.push(userObjectId);
       }
 
