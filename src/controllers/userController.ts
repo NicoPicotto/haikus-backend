@@ -66,16 +66,19 @@ const addUser = async (req: Request, res: Response) => {
 // Actualizar un usuario
 const updateUser = async (req: Request, res: Response) => {
    const { id } = req.params;
-   const data = req.body;
+   const { firstName, lastName, email, ...optionalData } = req.body;
 
-   if (Object.keys(data).length === 0) {
+   // Validar los campos obligatorios
+   if (!firstName || !lastName || !email) {
       return res.status(400).json({
-         error: "No se proporcionaron campos válidos para actualizar.",
+         error: "Los campos obligatorios (Nombre, Apellido, Email) no están completos.",
       });
    }
 
+   const updatedData = { firstName, lastName, email, ...optionalData };
+
    try {
-      const updatedUser = await userModel.updateUser(id, data);
+      const updatedUser = await userModel.updateUser(id, updatedData);
       if (!updatedUser) {
          return res.status(404).json({ message: "Usuario no encontrado" });
       }

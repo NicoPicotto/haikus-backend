@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
-import { UserRegisterBody, UserLoginBody } from "../interfaces/userInterface";
+import { UserRegisterBody, UserLoginBody, UserProfile } from "../interfaces/userInterface";
 
 const userSchema = new mongoose.Schema(
    {
@@ -9,6 +9,13 @@ const userSchema = new mongoose.Schema(
       email: { type: String, required: true, unique: true },
       password: { type: String, required: true },
       savedHaikus: [{ type: mongoose.Schema.Types.ObjectId, ref: "Haiku" }],
+      bio: { type: String, default: "" },
+      city: { type: String, default: "" },
+      socialLinks: {
+         twitter: { type: String, default: "" },
+         facebook: { type: String, default: "" },
+         instagram: { type: String, default: "" },
+      },
    },
    { versionKey: false, timestamps: true }
 );
@@ -66,7 +73,7 @@ const deleteUser = async (id: string) => {
 };
 
 // Actualizar un usuario
-const updateUser = async (id: string, data: Partial<UserRegisterBody>) => {
+const updateUser = async (id: string, data: Partial<UserProfile>) => {
    try {
       const updatedUser = await User.findByIdAndUpdate(
          id,
