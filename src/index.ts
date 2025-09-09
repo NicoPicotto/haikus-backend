@@ -30,3 +30,5 @@ app.use("/api/users", userRouter);
 app.listen(PORT, () => {
    console.log("Servidor en escucha por el puerto http://localhost:" + PORT);
 });
+
+export default app;
